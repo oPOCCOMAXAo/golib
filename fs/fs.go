@@ -1,13 +1,13 @@
 package fs
 
 import (
-	"log"
+	"github.com/opoccomaxao/golib/console"
 	"os"
 )
 
 func check(err error) {
 	if err != nil {
-		log.Println(err)
+		console.Error("Error: %#v", err)
 	}
 }
 

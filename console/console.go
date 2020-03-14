@@ -10,7 +10,7 @@ import (
 )
 
 func Error(format string, args ...interface{}) {
-	_, _ = fmt.Fprintf(os.Stderr, format, args...)
+	println(fmt.Sprintf(format, args...))
 }
 
 func Log(format string, args ...interface{}) {

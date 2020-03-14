@@ -27,7 +27,7 @@ type ColStats struct {
 	Avg int64
 }
 
-func CreateGraph(maxPts int64) Graph {
+func NewGraph(maxPts int64) *Graph {
 	res := Graph{
 		points: make([]Point, 0),
 		max:    maxPts,
@@ -45,7 +45,7 @@ func CreateGraph(maxPts int64) Graph {
 	res.rawbuffer = res.rawbuffer[:len(res.rawbuffer)]
 	res.clear()
 	res.cstats = make([]ColStats, res.col)
-	return res
+	return &res
 }
 
 func ptsMinMaxAvg(pts []Point) (min int64, max int64, avg int64) {

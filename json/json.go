@@ -1,8 +1,8 @@
-package JSON
+package json
 
 import (
 	"encoding/json"
-	"fmt"
+	"github.com/opoccomaxao/golib/console"
 )
 
 func Marshal(a interface{}, indent int) []byte {
@@ -15,7 +15,7 @@ func Marshal(a interface{}, indent int) []byte {
 	}
 	out, err := json.MarshalIndent(a, "", string(indentS))
 	if err != nil {
-		_ = fmt.Errorf("%#v", err)
+		console.Error("Error: %#v", err)
 	}
 	return out
 }
@@ -26,7 +26,7 @@ func Stringify(a interface{}, indent int) string {
 
 func Unmarshal(txt []byte, object interface{}) {
 	if err := json.Unmarshal(txt, &object); err != nil {
-		_ = fmt.Errorf("%#v", err)
+		console.Error("Error: %#v", err)
 	}
 }
 
