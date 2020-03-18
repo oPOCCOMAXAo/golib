@@ -48,6 +48,11 @@ func (rq *RequestClient) Post(url string, data string, timeout time.Duration, he
 	return rq.do(r, timeout, headers)
 }
 
+func (rq *RequestClient) Delete(url string, timeout time.Duration, headers map[string]string) (result string, status int, outHeaders http.Header) {
+	r, _ := http.NewRequest("DELETE", url, nil)
+	return rq.do(r, timeout, headers)
+}
+
 func (rq *RequestClient) printErr(err error) {
 	fmt.Printf("%#v\n", err)
 }
