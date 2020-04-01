@@ -1,6 +1,9 @@
 package event
 
-import "sync"
+import (
+	"reflect"
+	"sync"
+)
 
 type Emitter struct {
 	listeners map[string]ListenerList
@@ -8,11 +11,16 @@ type Emitter struct {
 }
 
 type Listener func(...interface{})
-type ListenerList []*Listener
+type ListenerList []Listener
 
-func (l ListenerList) IndexOf(element *Listener) int {
+func (ls Listener) ptr() uintptr {
+	return reflect.ValueOf(ls).Pointer()
+}
+
+func (l ListenerList) IndexOf(element Listener) int {
+	p := element.ptr()
 	for i := range l {
-		if l[i] == element {
+		if l[i].ptr() == p {
 			return i
 		}
 	}
@@ -27,7 +35,7 @@ func (e *Emitter) emit(name string, arguments []interface{}) {
 	e.mu.RLock()
 	if listeners, ok := e.listeners[name]; ok {
 		for _, l := range listeners {
-			go (*l)(arguments...)
+			go l(arguments...)
 		}
 	}
 	e.mu.RUnlock()
@@ -37,7 +45,7 @@ func (e *Emitter) Emit(name string, arguments ...interface{}) {
 	e.emit(name, arguments)
 }
 
-func (e *Emitter) AddEventListener(name string, listener *Listener) {
+func (e *Emitter) AddEventListener(name string, listener Listener) {
 	e.mu.Lock()
 	arr, ok := e.listeners[name]
 	if !ok {
@@ -49,11 +57,11 @@ func (e *Emitter) AddEventListener(name string, listener *Listener) {
 	e.mu.Unlock()
 }
 
-func (e *Emitter) On(name string, listener *Listener) {
+func (e *Emitter) On(name string, listener Listener) {
 	e.AddEventListener(name, listener)
 }
 
-func (e *Emitter) RemoveEventListener(name string, listener *Listener) {
+func (e *Emitter) RemoveEventListener(name string, listener Listener) {
 	e.mu.Lock()
 	if arr, ok := e.listeners[name]; ok {
 		i := arr.IndexOf(listener)
@@ -67,6 +75,6 @@ func (e *Emitter) RemoveEventListener(name string, listener *Listener) {
 	e.mu.Unlock()
 }
 
-func (e *Emitter) Off(name string, listener *Listener) {
+func (e *Emitter) Off(name string, listener Listener) {
 	e.RemoveEventListener(name, listener)
 }

@@ -25,16 +25,16 @@ func TestEventEmitter(t *testing.T) {
 			t.Errorf("Event has %v argument; want %v", i, testObj)
 		}
 	}
-	ee.On("Test", &listener)
+	ee.On("Test", listener)
 	if l := len(ee.listeners["Test"]); l != 1 {
 		t.Errorf("EE has %d Test-listeners; want 1", l)
 	}
 	go ee.Emit("Test", &testObj)
-	ee.Off("Test", &listener)
+	ee.Off("Test", listener)
 	if l := len(ee.listeners["Test"]); l != 0 {
 		t.Errorf("EE has %d Test-listeners; want 0", l)
 	}
-	ee.Off("Test", &listener)
+	ee.Off("Test", listener)
 	if l := len(ee.listeners["Test"]); l != 0 {
 		t.Errorf("EE has %d Test-listeners; want 0", l)
 	}
