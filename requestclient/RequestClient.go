@@ -63,7 +63,7 @@ func (rq *RequestClient) do(req *http.Request, timeout time.Duration, headers ma
 		req.Header.Set(k, v)
 	}
 	for k, v := range rq.defaultHeaders {
-		if _, prs := req.Header[k]; prs {
+		if _, prs := req.Header[k]; !prs {
 			req.Header.Set(k, v)
 		}
 	}
