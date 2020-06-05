@@ -14,7 +14,7 @@ func Error(format string, args ...interface{}) {
 }
 
 func Log(format string, args ...interface{}) {
-	fmt.Printf(format, args...)
+	fmt.Printf(format+"\n", args...)
 }
 
 func InfiniteWait() {
