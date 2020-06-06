@@ -2,10 +2,9 @@ package json
 
 import (
 	"encoding/json"
-	"github.com/opoccomaxao/golib/console"
 )
 
-func Marshal(a interface{}, indent int) []byte {
+func Marshal(a interface{}, indent int) ([]byte, error) {
 	if indent < 0 {
 		indent = 0
 	}
@@ -13,23 +12,22 @@ func Marshal(a interface{}, indent int) []byte {
 	for i := range indentS {
 		indentS[i] = ' '
 	}
-	out, err := json.MarshalIndent(a, "", string(indentS))
+	return json.MarshalIndent(a, "", string(indentS))
+}
+
+func Stringify(a interface{}, indent int) (string, error) {
+	b, err := Marshal(a, indent)
 	if err != nil {
-		console.Error("Error: %#v", err)
-	}
-	return out
-}
-
-func Stringify(a interface{}, indent int) string {
-	return string(Marshal(a, indent))
-}
-
-func Unmarshal(txt []byte, object interface{}) {
-	if err := json.Unmarshal(txt, &object); err != nil {
-		console.Error("Error: %#v", err)
+		return "", err
+	} else {
+		return string(b), nil
 	}
 }
 
-func Parse(txt string, object interface{}) {
-	Unmarshal([]byte(txt), object)
+func Unmarshal(txt []byte, object interface{}) error {
+	return json.Unmarshal(txt, &object)
+}
+
+func Parse(txt string, object interface{}) error {
+	return Unmarshal([]byte(txt), object)
 }
