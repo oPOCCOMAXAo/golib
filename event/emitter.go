@@ -1,30 +1,12 @@
 package event
 
 import (
-	"reflect"
 	"sync"
 )
 
 type Emitter struct {
 	listeners map[string]ListenerList
 	mu        sync.RWMutex
-}
-
-type Listener func(...interface{})
-type ListenerList []Listener
-
-func (ls Listener) ptr() uintptr {
-	return reflect.ValueOf(ls).Pointer()
-}
-
-func (l ListenerList) IndexOf(element Listener) int {
-	p := element.ptr()
-	for i := range l {
-		if l[i].ptr() == p {
-			return i
-		}
-	}
-	return -1
 }
 
 func NewEmitter() *Emitter {
