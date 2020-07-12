@@ -7,28 +7,29 @@ import (
 )
 
 type Console struct {
-	hubs    map[string]*ConsoleHub
+	hubs    map[string]*hub
 	Timeout int
 	Port    int16
 }
 
-type ConsoleHub struct {
+type hub struct {
 	text string
 }
 
 func i2s(i int) string {
 	return strconv.Itoa(i)
 }
-func (c *Console) CreateHub(name string) *ConsoleHub {
+
+func (c *Console) CreateHub(name string) *hub {
 	if c.hubs == nil {
-		c.hubs = make(map[string]*ConsoleHub)
+		c.hubs = make(map[string]*hub)
 	}
-	hub := &ConsoleHub{}
+	hub := &hub{}
 	c.hubs[name] = hub
 	return hub
 }
 
-const LINEFEED = "----------------------------------------"
+const linefeed = "----------------------------------------"
 
 func (c *Console) Handler(w http.ResponseWriter, r *http.Request) {
 	url := r.URL.Path
@@ -37,7 +38,7 @@ func (c *Console) Handler(w http.ResponseWriter, r *http.Request) {
 	url = strings.TrimPrefix(url, "/")
 	hub, ok := c.hubs[url]
 	if ok {
-		w.Write([]byte(hub.text))
+		_, _ = w.Write([]byte(hub.text))
 	} else {
 		s := url + "\n\n"
 		for key, value := range c.hubs {
@@ -46,17 +47,17 @@ func (c *Console) Handler(w http.ResponseWriter, r *http.Request) {
 			if c < 0 {
 				c = 0
 			}
-			s += ds + strings.Repeat("-", 40-len(ds)) + "\n" + value.text + "\n" + LINEFEED + "\n"
+			s += ds + strings.Repeat("-", 40-len(ds)) + "\n" + value.text + "\n" + linefeed + "\n"
 		}
-		w.Write([]byte(s))
+		_, _ = w.Write([]byte(s))
 	}
 }
 
-func (c *ConsoleHub) Log(s string) {
+func (c *hub) Log(s string) {
 	c.text += s
 }
 
-func (c *ConsoleHub) Clear() {
+func (c *hub) Clear() {
 	c.text = ""
 }
 

@@ -1,11 +1,13 @@
 package qs
 
-import "strings"
+import (
+	"net/url"
+)
 
 func Stringify(data map[string]string) string {
-	t := make([]string, 0)
+	values := url.Values{}
 	for key, value := range data {
-		t = append(t, key+"="+value)
+		values.Add(key, value)
 	}
-	return strings.Join(t, "&")
+	return values.Encode()
 }
