@@ -24,4 +24,28 @@ func TestCheckValue(t *testing.T) {
 		i: 1234,
 		f: 123.45,
 	})
+	CheckValue(t, "slice", []int{1, 2, 3, 4, 5}, []int{1, 2, 3, 4, 5})
+	CheckValue(t, "object slice", []testStruct{
+		{
+			s: "test",
+			i: 1234,
+			f: 123.45,
+		},
+		{
+			s: "test2",
+			i: 2234,
+			f: 223.45,
+		},
+	}, []testStruct{
+		{
+			s: "test",
+			i: 1234,
+			f: 123.45,
+		},
+		{
+			s: "test2",
+			i: 2234,
+			f: 223.45,
+		},
+	})
 }

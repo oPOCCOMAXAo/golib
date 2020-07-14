@@ -1,9 +1,12 @@
 package test
 
-import "testing"
+import (
+	"reflect"
+	"testing"
+)
 
 func CheckValue(t *testing.T, name string, expected interface{}, got interface{}) {
-	if expected != got {
+	if !reflect.DeepEqual(expected, got) {
 		t.Errorf("%s: expected %v, but got %v", name, expected, got)
 	}
 }
